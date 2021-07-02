@@ -147,8 +147,9 @@ PCRE_OPT=
 PCRE_CONF_OPT=
 PCRE_JIT=NO
 
-USE_OPENSSL=NO
+USE_OPENSSL_OR_AWSLC=NO
 OPENSSL=NONE
+AWSLC=NONE
 
 USE_ZLIB=NO
 ZLIB=NONE
@@ -360,6 +361,7 @@ use the \"--with-mail_ssl_module\" option instead"
 
         --with-openssl=*)                OPENSSL="$value"           ;;
         --with-openssl-opt=*)            OPENSSL_OPT="$value"       ;;
+        --with-awslc=*)                  AWSLC="$value"           ;;
 
         --with-md5=*)
             NGX_POST_CONF_MSG="$NGX_POST_CONF_MSG
@@ -585,6 +587,8 @@ cat << END
 
   --with-openssl=DIR                 set path to OpenSSL library sources
   --with-openssl-opt=OPTIONS         set additional build options for OpenSSL
+
+  --with-awslc=DIR                   set path to AWS-LC library artifacts
 
   --with-debug                       enable debug logging
 

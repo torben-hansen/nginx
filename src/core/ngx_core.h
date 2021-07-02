@@ -80,7 +80,7 @@ typedef void (*ngx_connection_handler_pt)(ngx_connection_t *c);
 #include <ngx_inet.h>
 #include <ngx_cycle.h>
 #include <ngx_resolver.h>
-#if (NGX_OPENSSL)
+#if defined(NGX_OPENSSL) || defined(NGX_AWSLC)
 #include <ngx_event_openssl.h>
 #endif
 #include <ngx_process_cycle.h>

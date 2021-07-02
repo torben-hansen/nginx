@@ -21,7 +21,7 @@ END
 fi
 
 
-if [ $USE_OPENSSL = YES ]; then
+if [ $USE_OPENSSL_OR_AWSLC = YES ]; then
     . auto/lib/openssl/conf
 fi
 

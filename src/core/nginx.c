@@ -237,7 +237,7 @@ main(int argc, char *const *argv)
     }
 
     /* STUB */
-#if (NGX_OPENSSL)
+#if defined(NGX_OPENSSL) || defined(NGX_AWSLC)
     ngx_ssl_init(log);
 #endif
 

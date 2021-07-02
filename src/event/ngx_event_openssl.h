@@ -31,8 +31,11 @@
 #include <openssl/x509.h>
 #include <openssl/x509v3.h>
 
+#if defined(NGX_AWSLC)
+#define NGX_SSL_NAME     "AWS-LC"
+#else
 #define NGX_SSL_NAME     "OpenSSL"
-
+#endif
 
 #if (defined LIBRESSL_VERSION_NUMBER && OPENSSL_VERSION_NUMBER == 0x20000000L)
 #undef OPENSSL_VERSION_NUMBER

@@ -2,8 +2,62 @@
 # Copyright (C) Igor Sysoev
 # Copyright (C) Nginx, Inc.
 
+if [ $AWSLC != NONE -a $OPENSSL != NONE ]; then
 
-if [ $OPENSSL != NONE ]; then
+cat << END
+
+$0: error: Both AWS-LC and OpenSSL are specified.
+You can specify either AWS-LC or OpenSSL but not both. The former through the
+--with-awslc=<path> option and the latter through the --with-openssl=<path>
+option.
+
+END
+    exit 1
+fi
+
+if [ $AWSLC != NONE ]; then
+
+    have=NGX_AWSLC . auto/have
+    have=NGX_SSL . auto/have
+
+    # AWS-LC does not atm have the level of OCSP stapling support required by
+    # nginx. Limited support for stapling is being implemented:
+    # https://github.com/awslabs/aws-lc/tree/ocsp-patch
+    # Flag disabling OCSP is already defined by AWS-LC. Below command can be
+    # used to define the flag if this changes.
+    # have=OPENSSL_NO_OCSP . auto/have
+
+    # AWS-LC does support the same engine generality OpenSSL has. There is
+    # limited support for RSA and ECDSA signature algorithm offload:
+    # https://github.com/awslabs/aws-lc/blob/main/include/openssl/engine.h
+    # Flag disabling ENGINE is already defined by AWS-LC. Below command can be
+    # used to define the flag if this changes.
+    # have=OPENSSL_NO_ENGINE . auto/have
+
+    # Expects the following directory structure:
+    # $AWSLC
+    #   |
+    #   - /include
+    #   |   |
+    #   |   - /openssl
+    #   |   |   |
+    #   |   |   - include files
+    #   |
+    #   - /lib64
+    #   |   |
+    #   |   - libssl.a
+    #   |   - libcrypto.a
+    CORE_INCS="$CORE_INCS $AWSLC/include"
+    CORE_LIBS="$CORE_LIBS $AWSLC/lib64/libssl.a"
+    CORE_LIBS="$CORE_LIBS $AWSLC/lib64/libcrypto.a"
+    CORE_LIBS="$CORE_LIBS $NGX_LIBDL"
+    CORE_LIBS="$CORE_LIBS $NGX_LIBPTHREAD"
+
+    if [ "$NGX_PLATFORM" = win32 ]; then
+        CORE_LIBS="$CORE_LIBS -lgdi32 -lcrypt32 -lws2_32"
+    fi
+
+else if [ $OPENSSL != NONE ]; then
 
     case "$CC" in
 
@@ -139,4 +193,5 @@ END
         exit 1
     fi
 
+fi
 fi

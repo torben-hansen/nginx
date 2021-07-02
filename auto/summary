@@ -28,6 +28,11 @@ case $OPENSSL in
     *)     echo "  + using OpenSSL library: $OPENSSL" ;;
 esac
 
+case $AWSLC in
+    NONE)  echo "  + AWS-LC library is not used" ;;
+    *)     echo "  + using AWS-LC library: $AWSLC" ;;
+esac
+
 case $ZLIB in
     YES)   echo "  + using system zlib library" ;;
     NONE)  echo "  + zlib library is not used" ;;
